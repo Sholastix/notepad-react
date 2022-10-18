@@ -1,0 +1,26 @@
+// Buttons general styling (extend shared style for all buttons).
+%btn-shared {
+  border: 1px solid black;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  transition: all 0.5s;
+}
+
+// Buttons.
+.btn {
+  &-main {
+    @extend %btn-shared;
+    background-color: white;
+    color: black;
+  }
+}
+
+// Text align.
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
