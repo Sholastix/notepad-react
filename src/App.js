@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import './scss/main.css';
+import { IdGenerator } from './utilities/IdGenerator';
 
 const App = () => {
 
@@ -30,7 +31,7 @@ const App = () => {
   const handleChange = (event) => {
     try {
       // const input = event.target;
-  
+
       // Change task input value from default to user's value. 
       setTaskInput(event.target.value);
     } catch (error) {
@@ -44,8 +45,11 @@ const App = () => {
       // Add new input value to list of tasks in our form.
       setTaskList(taskInput);
 
-      // Insert input value in localStorage. (REMEMBER TO ADD KEY GENERATOR FOR VALUES!).
-      localStorage.setItem('key', taskInput);
+      // Generate unique ID for the new task.
+      const id = IdGenerator();
+
+      // Insert input value in localStorage.
+      localStorage.setItem(id, taskInput);
 
       // Clearing input field after value submitting.
       setTaskInput('');
@@ -80,7 +84,7 @@ const App = () => {
             <input type='text' className='filter' name='filter' placeholder='Search task' />
           </div>
           <ul className='tasks-list'>
-            {taskList}
+            {/* {taskList} */}
           </ul>
           <button className='tasks-clear btn-main'>CLEAR ALL</button>
         </div>
