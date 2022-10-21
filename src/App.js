@@ -13,25 +13,24 @@ const App = () => {
 
   /////////////////////////////////// HANDLERS ////////////////////////////////
 
-  // useEffect(() => {
-  //   getTaskList();
-  // });
+  useEffect(() => {
+    getTaskList();
+  }, []);
 
-  // // Get all tasks from local storage.  ()
-  // const getTaskList = () => {
-  //   try {
-  //     const tasks = localStorage.getItem('key');
-  //     setTaskList(tasks);
-  //   } catch (error) {
-  //     console.error(error);
-  //   };
-  // };
+  // Get all tasks from local storage.
+  const getTaskList = () => {
+    try {
+      let tasks;
+      localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
+      setTaskList(tasks);
+    } catch (error) {
+      console.error(error);
+    };
+  };
 
   // FOLLOWING UP CHANGES IN INPUT FIELD. (REMEMBER TO SET LIMITATIONS FOR INPUT DATA!).
-  const handleChange = (event) => {
+  const handleInputChange = (event) => {
     try {
-      // const input = event.target;
-
       // Change task input value from default to user's value. 
       setTaskInput(event.target.value);
     } catch (error) {
@@ -39,23 +38,22 @@ const App = () => {
     };
   };
 
-  // ADD NEW TASK.
-  const addTask = (event) => {
+  // CREATE NEW TASK.
+  const createNewTask = () => {
+    return {
+      id: IdGenerator(),
+      text: taskInput,
+    };
+  };
+
+  // ADD NEW TASK TO LOCAL STORAGE.
+  const addTaskToLocalStorage = () => {
     try {
-      // Add new input value to list of tasks in our form.
-      setTaskList(taskInput);
-
-      // Generate unique ID for the new task.
-      const id = IdGenerator();
-
-      // Insert input value in localStorage.
-      localStorage.setItem(id, taskInput);
-
-      // Clearing input field after value submitting.
-      setTaskInput('');
-
-      // Prevent page reload.
-      event.preventDefault();
+      let tasks;
+      localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
+      tasks.push(createNewTask());
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      setTaskInput(taskInput);
     } catch (error) {
       console.error(error);
     };
@@ -69,11 +67,11 @@ const App = () => {
           <form id='task-form'>
             <div className='input-field'>
               <p className='chars-ui'>Remaining characters: <span className='chars-ui-counter'></span></p>
-              <input value={taskInput} onChange={handleChange} type='text' className='task-input' name='task-input' placeholder='New task' required></input>
+              <input value={taskInput} onChange={handleInputChange} type='text' className='task-input' name='task-input' placeholder='New task' required></input>
             </div>
 
             <div className='button-submit text-left'>
-              <input onClick={addTask} type='submit' value="ADD TASK" className='btn-main' />
+              <input onClick={addTaskToLocalStorage} type='submit' value="ADD TASK" className='btn-main' />
             </div>
           </form>
         </div>
@@ -84,7 +82,12 @@ const App = () => {
             <input type='text' className='filter' name='filter' placeholder='Search task' />
           </div>
           <ul className='tasks-list'>
-            {/* {taskList} */}
+            {taskList.map((task) => {
+              return <li key={task.id} className='tasks-list-item'>
+                <i className='fas fa-times'></i>
+                {task.text}
+              </li>
+            })}
           </ul>
           <button className='tasks-clear btn-main'>CLEAR ALL</button>
         </div>
