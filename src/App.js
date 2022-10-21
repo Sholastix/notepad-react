@@ -47,13 +47,26 @@ const App = () => {
   };
 
   // ADD NEW TASK TO LOCAL STORAGE.
-  const addTaskToLocalStorage = () => {
+  const addTaskToLocalStorage = (event) => {
     try {
       let tasks;
       localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
       tasks.push(createNewTask());
       localStorage.setItem('tasks', JSON.stringify(tasks));
       setTaskInput(taskInput);
+      getTaskList();
+      event.preventDefault();
+    } catch (error) {
+      console.error(error);
+    };
+  };
+
+  // DELETE ALL TASKS FROM LOCAL STORAGE.
+  const clearAllTasksFromLocalStorage = () => {
+    try {
+      localStorage.clear();
+      setTaskList(taskList);
+      getTaskList();
     } catch (error) {
       console.error(error);
     };
@@ -89,7 +102,7 @@ const App = () => {
               </li>
             })}
           </ul>
-          <button className='tasks-clear btn-main'>CLEAR ALL</button>
+          <button className='tasks-clear btn-main' onClick={clearAllTasksFromLocalStorage}>CLEAR ALL</button>
         </div>
       </div>
     </div>
