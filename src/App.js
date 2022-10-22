@@ -17,7 +17,7 @@ const App = () => {
     getTaskList();
   }, []);
 
-  // Get all tasks from local storage.
+  // GET ALL TASKS FROM LOCAL STORAGE.
   const getTaskList = () => {
     try {
       let tasks;
@@ -53,12 +53,19 @@ const App = () => {
       localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
       tasks.push(createNewTask());
       localStorage.setItem('tasks', JSON.stringify(tasks));
-      setTaskInput(taskInput);
       getTaskList();
+      setTaskInput('');
       event.preventDefault();
     } catch (error) {
       console.error(error);
     };
+  };
+
+  // DELETE ONE SELECTED TASK.
+  const deleteSelectedTask = (id) => {
+    const newTaskList = taskList.filter((task) => task.id !== id);
+    setTaskList(newTaskList);
+    localStorage.setItem('tasks', JSON.stringify(newTaskList));
   };
 
   // DELETE ALL TASKS FROM LOCAL STORAGE.
@@ -97,7 +104,7 @@ const App = () => {
           <ul className='tasks-list'>
             {taskList.map((task) => {
               return <li key={task.id} className='tasks-list-item'>
-                <i className='fas fa-times'></i>
+                <i className='fas fa-times' onClick={() => deleteSelectedTask(task.id)}></i>
                 {task.text}
               </li>
             })}
