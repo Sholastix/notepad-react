@@ -21,14 +21,17 @@ const App = () => {
   const getTaskList = () => {
     try {
       let tasks;
+      // Check if we already have 'tasks' key in LS. If YES - get the data from it. If NO - create this key and set initial value as empty array.
+      // REMEMEBER - LS stores 'STRING' type of data only. We must convert this string into object at first.
       localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
+      // Set value from LS as actual taskList value.
       setTaskList(tasks);
     } catch (error) {
       console.error(error);
     };
   };
 
-  // FOLLOWING UP CHANGES IN INPUT FIELD. (REMEMBER TO SET LIMITATIONS FOR INPUT DATA!).
+  // HANDLING CHANGES IN THE INPUT FIELD. (TODO: set limitations for input data).
   const handleInputChange = (event) => {
     try {
       // Change task input value from default to user's value. 
@@ -46,15 +49,23 @@ const App = () => {
     };
   };
 
-  // ADD NEW TASK TO LOCAL STORAGE.
-  const addTaskToLocalStorage = (event) => {
+  // ADD NEW TASK.
+  const addTask = (event) => {
     try {
       let tasks;
+      // Extract the list of tasks from LS.
       localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
-      tasks.push(createNewTask());
+      // Create new task with help of previously made function.
+      const newTask = createNewTask();
+      // Push this new task into task list.
+      tasks.push(newTask);
+      // Insert updated list of tasks into LS.
       localStorage.setItem('tasks', JSON.stringify(tasks));
+      // Visualise the updated task list from LS in UI.
       getTaskList();
+      // Clear the task input field.
       setTaskInput('');
+      // Prevent page reloading.
       event.preventDefault();
     } catch (error) {
       console.error(error);
@@ -63,16 +74,20 @@ const App = () => {
 
   // DELETE ONE SELECTED TASK.
   const deleteSelectedTask = (id) => {
+    // Return all tasks except the targeted one (based on task's ID). 
+    // ID we get from taskList.map() method which we use in element with '.task-list'. 
     const newTaskList = taskList.filter((task) => task.id !== id);
+    // Set new value to task list value...
     setTaskList(newTaskList);
+    // ... and push this new task list value into LS. 
+    // REMEMBER - LS only accepts 'STRING' data type, so we have to convert the object to a string at first.
     localStorage.setItem('tasks', JSON.stringify(newTaskList));
   };
 
-  // DELETE ALL TASKS FROM LOCAL STORAGE.
-  const clearAllTasksFromLocalStorage = () => {
+  // DELTE ALL FROM LOCAL STORAGE.
+  const deleteAllTasks = () => {
     try {
       localStorage.clear();
-      setTaskList(taskList);
       getTaskList();
     } catch (error) {
       console.error(error);
@@ -87,11 +102,24 @@ const App = () => {
           <form id='task-form'>
             <div className='input-field'>
               <p className='chars-ui'>Remaining characters: <span className='chars-ui-counter'></span></p>
-              <input value={taskInput} onChange={handleInputChange} type='text' className='task-input' name='task-input' placeholder='New task' required></input>
+              <input
+                onChange={handleInputChange}
+                type='text'
+                className='task-input'
+                name='task-input'
+                value={taskInput}
+                placeholder='New task'
+                required>
+              </input>
             </div>
 
             <div className='button-submit text-left'>
-              <input onClick={addTaskToLocalStorage} type='submit' value="ADD TASK" className='btn-main' />
+              <input
+                onClick={addTask}
+                type='submit'
+                className='btn-main'
+                value='ADD TASK'
+              />
             </div>
           </form>
         </div>
@@ -99,7 +127,12 @@ const App = () => {
         <div className='card-action'>
           <h4 className='task-title'>Tasks List</h4>
           <div className='input-field'>
-            <input type='text' className='filter' name='filter' placeholder='Search task' />
+            <input
+              type='text'
+              className='filter'
+              name='filter'
+              placeholder='Search task'
+            />
           </div>
           <ul className='tasks-list'>
             {taskList.map((task) => {
@@ -109,7 +142,7 @@ const App = () => {
               </li>
             })}
           </ul>
-          <button className='tasks-clear btn-main' onClick={clearAllTasksFromLocalStorage}>CLEAR ALL</button>
+          <button className='tasks-clear btn-main' onClick={deleteAllTasks}>CLEAR ALL</button>
         </div>
       </div>
     </div>
