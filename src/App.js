@@ -4,15 +4,17 @@ import './scss/main.css';
 import { IdGenerator } from './utilities/IdGenerator';
 
 const App = () => {
-
   /////////////////////////////////// STATE SETTINGS ////////////////////////////////
 
   const [taskList, setTaskList] = useState([]);
+  
   const [taskInput, setTaskInput] = useState('');
-
   const maxLimitOfChars = 50;
   const [numberOfChars, setNumberOfChars] = useState(maxLimitOfChars);
   const [charCounterColor, setCharcounterColor] = useState('chars-ui-counter-green');
+  
+  const [pointerEvents, setPointerEvents] = useState('auto');
+  const [disabledSubmitButton, setDisabledSubmitButton] = useState(false);
 
   /////////////////////////////////// HANDLERS ////////////////////////////////
 
@@ -34,20 +36,34 @@ const App = () => {
     };
   };
 
-  // HANDLING CHANGES IN THE INPUT FIELD AND CHAR COUNTER.
-  const handleInputChange = (event) => {
+  // HANDLING CHANGES IN THE INPUT FIELD & CHAR COUNTER.
+  const handleChange = (event) => {
     const userInput = event.target.value;
+
     try {
-      // Handling changes in the char counter.
-      if (userInput.length > maxLimitOfChars) {
-        setNumberOfChars('ALARM! CHARS OVERLOAD :)');
-        setCharcounterColor('chars-ui-counter-red');
-      } else {
-        setNumberOfChars(maxLimitOfChars - userInput.length);
-        setCharcounterColor('chars-ui-counter-green');
-      };
       // Changing task input value from default to user's value. 
       setTaskInput(userInput);
+
+      // Handling changes in the char counter (text & color).
+      if (userInput.length <= maxLimitOfChars) {
+        // Calculate number of chars available to the user.
+        setNumberOfChars(maxLimitOfChars - userInput.length);
+        // Set color of char counter to 'green'.
+        setCharcounterColor('chars-ui-counter-green');
+        // Turn on cursor and allow user to submit the data.
+        setPointerEvents('auto');
+        // Visually turn on the 'submit' button.
+        setDisabledSubmitButton(false);
+      } else {
+        // Set warning for user in char counter.
+        setNumberOfChars('ALARM! CHARS OVERLOAD :)');
+        // Set color of char counter to 'red'.
+        setCharcounterColor('chars-ui-counter-red');
+        // Turn off cursor and prevent user from submitting the data.
+        setPointerEvents('none');
+        // Visually turn off the 'submit' button.
+        setDisabledSubmitButton(true);
+      };
     } catch (error) {
       console.error(error);
     };
@@ -115,7 +131,7 @@ const App = () => {
             <div className='input-field'>
               <p className='chars-ui'>Remaining characters: <span className={charCounterColor}>{numberOfChars}</span></p>
               <input
-                onChange={handleInputChange}
+                onChange={handleChange}
                 type='text'
                 className='task-input'
                 name='task-input'
@@ -128,6 +144,8 @@ const App = () => {
             <div className='button-submit text-left'>
               <input
                 onClick={addTask}
+                disabled={disabledSubmitButton}
+                style={{pointerEvents}}
                 type='submit'
                 className='btn-main'
                 value='ADD TASK'

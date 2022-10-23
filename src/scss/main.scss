@@ -58,6 +58,7 @@ a {
 
             &-counter-green {
               color: green;
+              font-weight: normal;
             }
 
             &-counter-red {
@@ -89,7 +90,7 @@ a {
             margin: 2rem 0 4rem 0;
 
             &:disabled {
-              opacity: 0.3;
+              opacity: 0.2;
             }
 
             &:hover {
