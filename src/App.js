@@ -10,6 +10,9 @@ const App = () => {
   const [taskList, setTaskList] = useState([]);
   const [taskInput, setTaskInput] = useState('');
 
+  const maxLimitOfChars = 50;
+  const [numberOfChars, setNumberOfChars] = useState(maxLimitOfChars);
+  const [charCounterColor, setCharcounterColor] = useState('chars-ui-counter-green');
 
   /////////////////////////////////// HANDLERS ////////////////////////////////
 
@@ -31,11 +34,20 @@ const App = () => {
     };
   };
 
-  // HANDLING CHANGES IN THE INPUT FIELD. (TODO: set limitations for input data).
+  // HANDLING CHANGES IN THE INPUT FIELD AND CHAR COUNTER.
   const handleInputChange = (event) => {
+    const userInput = event.target.value;
     try {
-      // Change task input value from default to user's value. 
-      setTaskInput(event.target.value);
+      // Handling changes in the char counter.
+      if (userInput.length > maxLimitOfChars) {
+        setNumberOfChars('ALARM! CHARS OVERLOAD :)');
+        setCharcounterColor('chars-ui-counter-red');
+      } else {
+        setNumberOfChars(maxLimitOfChars - userInput.length);
+        setCharcounterColor('chars-ui-counter-green');
+      };
+      // Changing task input value from default to user's value. 
+      setTaskInput(userInput);
     } catch (error) {
       console.error(error);
     };
@@ -101,7 +113,7 @@ const App = () => {
           <h2>Notepad</h2>
           <form id='task-form'>
             <div className='input-field'>
-              <p className='chars-ui'>Remaining characters: <span className='chars-ui-counter'></span></p>
+              <p className='chars-ui'>Remaining characters: <span className={charCounterColor}>{numberOfChars}</span></p>
               <input
                 onChange={handleInputChange}
                 type='text'

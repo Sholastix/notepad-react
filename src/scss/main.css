@@ -67,8 +67,12 @@ a {
   font-size: 1.4rem;
   margin-bottom: 1rem;
 }
-.container .card-content #task-form .input-field .chars-ui-counter {
+.container .card-content #task-form .input-field .chars-ui-counter-green {
   color: green;
+}
+.container .card-content #task-form .input-field .chars-ui-counter-red {
+  color: red;
+  font-weight: bold;
 }
 .container .card-content #task-form .input-field .task-input {
   border-top: none;

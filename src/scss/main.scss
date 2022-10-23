@@ -56,8 +56,13 @@ a {
             font-size: 1.4rem;
             margin-bottom: 1rem;
 
-            &-counter {
+            &-counter-green {
               color: green;
+            }
+
+            &-counter-red {
+              color: red;
+              font-weight: bold;
             }
           }
 
