@@ -7,14 +7,17 @@ const App = () => {
   /////////////////////////////////// STATE SETTINGS ////////////////////////////////
 
   const [taskList, setTaskList] = useState([]);
-  
+
   const [taskInput, setTaskInput] = useState('');
   const maxLimitOfChars = 50;
   const [numberOfChars, setNumberOfChars] = useState(maxLimitOfChars);
   const [charCounterColor, setCharcounterColor] = useState('chars-ui-counter-green');
-  
+
   const [pointerEvents, setPointerEvents] = useState('auto');
   const [disabledSubmitButton, setDisabledSubmitButton] = useState(false);
+
+  const [filterInput, setFilterInput] = useState('');
+  const [filteredTasks, setFilteredTasks] = useState([]);
 
   /////////////////////////////////// HANDLERS ////////////////////////////////
 
@@ -93,6 +96,8 @@ const App = () => {
       getTaskList();
       // Clear the task input field.
       setTaskInput('');
+      // Reset char counter value.
+      setNumberOfChars(maxLimitOfChars);
       // Prevent page reloading.
       event.preventDefault();
     } catch (error) {
@@ -122,6 +127,31 @@ const App = () => {
     };
   };
 
+  // TASK FILTERING.
+  // Handling changes in task filter input.
+  const handleFilterInputChange = (event) => {
+    try {
+      // Changing filter input value from default to user's value converted to lower case.
+      const inputText = event.target.value.toLowerCase();
+      setFilterInput(inputText);
+    } catch (error) {
+      console.error(error);
+    };
+  };
+
+  // // Get the filtered tasks and show it to user.
+  // const taskFilter = () => {
+  //   const filtrationResult = taskList.filter((item) => {
+  //     const storedText = item.text.toLowerCase();
+  //     const regExp = new RegExp(`^${filterInput}`, 'gi');
+
+  //     return storedText.match(regExp) ? true : false;
+  //   });
+
+  //   console.log(filtrationResult);
+  //   // setFilteredTasks(filtrationResult);
+  // };
+
   return (
     <div className='container'>
       <div className='card text-center'>
@@ -145,7 +175,7 @@ const App = () => {
               <input
                 onClick={addTask}
                 disabled={disabledSubmitButton}
-                style={{pointerEvents}}
+                style={{ pointerEvents }}
                 type='submit'
                 className='btn-main'
                 value='ADD TASK'
@@ -158,6 +188,7 @@ const App = () => {
           <h4 className='task-title'>Tasks List</h4>
           <div className='input-field'>
             <input
+              onChange={handleFilterInputChange}
               type='text'
               className='filter'
               name='filter'
