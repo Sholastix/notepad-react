@@ -1,25 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
 import './scss/main.css';
-import { IdGenerator } from './utilities/IdGenerator';
+import { idGenerator } from './utilities/idGenerator';
 
 const App = () => {
-  /////////////////////////////////// STATE SETTINGS ////////////////////////////////
-
   const [taskList, setTaskList] = useState([]);
 
   const [taskInput, setTaskInput] = useState('');
   const maxLimitOfChars = 50;
   const [numberOfChars, setNumberOfChars] = useState(maxLimitOfChars);
-  const [charCounterColor, setCharcounterColor] = useState('chars-ui-counter-green');
+  const [charCounterColor, setCharCounterColor] = useState('chars-ui-counter-green');
 
   const [pointerEvents, setPointerEvents] = useState('auto');
   const [disabledSubmitButton, setDisabledSubmitButton] = useState(false);
 
   const [filterInput, setFilterInput] = useState('');
   const [filteredTasks, setFilteredTasks] = useState([]);
-
-  /////////////////////////////////// HANDLERS ////////////////////////////////
 
   useEffect(() => {
     getTaskList();
@@ -41,18 +37,16 @@ const App = () => {
 
   // HANDLING CHANGES IN THE INPUT FIELD & CHAR COUNTER.
   const handleChange = (event) => {
-    const userInput = event.target.value;
-
     try {
       // Changing task input value from default to user's value. 
-      setTaskInput(userInput);
+      const userInput = event.target.value;
 
       // Handling changes in the char counter (text & color).
       if (userInput.length <= maxLimitOfChars) {
         // Calculate number of chars available to the user.
         setNumberOfChars(maxLimitOfChars - userInput.length);
         // Set color of char counter to 'green'.
-        setCharcounterColor('chars-ui-counter-green');
+        setCharCounterColor('chars-ui-counter-green');
         // Turn on cursor and allow user to submit the data.
         setPointerEvents('auto');
         // Visually turn on the 'submit' button.
@@ -61,12 +55,14 @@ const App = () => {
         // Set warning for user in char counter.
         setNumberOfChars('ALARM! CHARS OVERLOAD :)');
         // Set color of char counter to 'red'.
-        setCharcounterColor('chars-ui-counter-red');
+        setCharCounterColor('chars-ui-counter-red');
         // Turn off cursor and prevent user from submitting the data.
         setPointerEvents('none');
         // Visually turn off the 'submit' button.
         setDisabledSubmitButton(true);
       };
+
+      setTaskInput(userInput);
     } catch (error) {
       console.error(error);
     };
@@ -75,7 +71,7 @@ const App = () => {
   // CREATE NEW TASK.
   const createNewTask = () => {
     return {
-      id: IdGenerator(),
+      id: idGenerator(),
       text: taskInput,
     };
   };
@@ -110,7 +106,7 @@ const App = () => {
     };
   };
 
-  // DELETE ONE SELECTED TASK.
+  // DELETE ONE TASK.
   const deleteSelectedTask = (id) => {
     // Return all tasks except the targeted one (based on task's ID). 
     // ID we get from taskList.map() method which we use in element with '.task-list'. 
@@ -122,7 +118,7 @@ const App = () => {
     localStorage.setItem('tasks', JSON.stringify(newTaskList));
   };
 
-  // DELTE ALL FROM LOCAL STORAGE.
+  // DELTE ALL TASKS.
   const deleteAllTasks = () => {
     try {
       if (taskList.length > 0) {
@@ -136,30 +132,29 @@ const App = () => {
     };
   };
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   // TASK FILTERING.
-  // Handling changes in task filter input.
-  const handleFilterInputChange = (event) => {
+  const handleFilterChange = (event) => {
     try {
-      // Changing filter input value from default to user's value converted to lower case.
-      const inputText = event.target.value.toLowerCase();
-      setFilterInput(inputText);
+      // Changing filter input value from default to user's value.
+      const filterText = event.target.value;
+
+      // Get the filtered tasks and show it to user.
+      const filtrationResult = taskList.filter((item) => {
+        const regExp = new RegExp(`^${filterText}`, 'gi');
+
+        return item.text.match(regExp) ? true : false;
+      });
+
+      console.log(filtrationResult);
+      // setFilteredTasks(filtrationResult);
     } catch (error) {
       console.error(error);
     };
   };
 
-  // // Get the filtered tasks and show it to user.
-  // const taskFilter = () => {
-  //   const filtrationResult = taskList.filter((item) => {
-  //     const storedText = item.text.toLowerCase();
-  //     const regExp = new RegExp(`^${inputText}`, 'gi');
-
-  //     return storedText.match(regExp) ? true : false;
-  //   });
-
-  //   console.log(filtrationResult);
-  //   // setFilteredTasks(filtrationResult);
-  // };
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className='container'>
@@ -196,7 +191,7 @@ const App = () => {
           <h4 className='task-title'>Tasks List</h4>
           <div className='input-field'>
             <input
-              onChange={handleFilterInputChange}
+              onChange={handleFilterChange}
               type='text'
               className='filter'
               name='filter'
