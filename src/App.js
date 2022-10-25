@@ -120,8 +120,12 @@ const App = () => {
   // DELTE ALL FROM LOCAL STORAGE.
   const deleteAllTasks = () => {
     try {
-      localStorage.clear();
-      getTaskList();
+      if (taskList.length > 0) {
+        if (window.confirm('ARE YOU SURE?')) {
+          localStorage.clear();
+          getTaskList();
+        };
+      };
     } catch (error) {
       console.error(error);
     };
