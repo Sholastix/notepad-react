@@ -83,23 +83,28 @@ const App = () => {
   // ADD NEW TASK.
   const addTask = (event) => {
     try {
-      let tasks;
-      // Extract the list of tasks from LS.
-      localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
-      // Create new task with help of previously made function.
-      const newTask = createNewTask();
-      // Push this new task into task list.
-      tasks.push(newTask);
-      // Insert updated list of tasks into LS.
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-      // Visualise the updated task list from LS in UI.
-      getTaskList();
-      // Clear the task input field.
-      setTaskInput('');
-      // Reset char counter value.
-      setNumberOfChars(maxLimitOfChars);
-      // Prevent page reloading.
-      event.preventDefault();
+      if (taskInput.length === 0) {
+        alert('PLEASE WRITE SOMETHING!');
+        event.preventDefault();
+      } else {
+        let tasks;
+        // Extract the list of tasks from LS.
+        localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
+        // Create new task with help of previously made function.
+        const newTask = createNewTask();
+        // Push this new task into task list.
+        tasks.push(newTask);
+        // Insert updated list of tasks into LS.
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        // Visualise the updated task list from LS in UI.
+        getTaskList();
+        // Clear the task input field.
+        setTaskInput('');
+        // Reset char counter value.
+        setNumberOfChars(maxLimitOfChars);
+        // Prevent page reloading.
+        event.preventDefault();
+      };
     } catch (error) {
       console.error(error);
     };
@@ -170,8 +175,7 @@ const App = () => {
                 className='task-input'
                 name='task-input'
                 value={taskInput}
-                placeholder='New task'
-                required>
+                placeholder='New task'>
               </input>
             </div>
 
