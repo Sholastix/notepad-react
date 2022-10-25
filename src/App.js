@@ -152,7 +152,7 @@ const App = () => {
   // const taskFilter = () => {
   //   const filtrationResult = taskList.filter((item) => {
   //     const storedText = item.text.toLowerCase();
-  //     const regExp = new RegExp(`^${filterInput}`, 'gi');
+  //     const regExp = new RegExp(`^${inputText}`, 'gi');
 
   //     return storedText.match(regExp) ? true : false;
   //   });
