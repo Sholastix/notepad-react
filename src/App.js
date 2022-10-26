@@ -29,14 +29,14 @@ const App = () => {
     taskFilter();
   }, [taskList]);
 
-  // GET ALL TASKS FROM LOCAL STORAGE.
+  // GET ALL TASKS FROM LOCAL STORAGE (LS) AND SHOW IT IN UI.
   const getTaskList = () => {
     try {
       let tasks;
       // Check if we already have 'tasks' key in LS. If YES - get the data from it. If NO - create this key and set initial value as empty array.
       // REMEMEBER - LS stores 'STRING' type of data only. We must convert this string into object at first.
       localStorage.getItem('tasks') ? tasks = JSON.parse(localStorage.getItem('tasks')) : tasks = [];
-      // Set value from LS as actual taskList value.
+      // Set value from LS as current taskList value.
       setTaskList(tasks);
     } catch (error) {
       console.error(error);
@@ -46,9 +46,9 @@ const App = () => {
   // HANDLING CHANGES IN THE INPUT FIELD & CHAR COUNTER.
   const handleChange = (event) => {
     try {
-      // Changing task input value from default to user's value. 
       const userInput = event.target.value;
-
+      // Set value from user as current taskInput value.
+      setTaskInput(userInput);
       // Handling changes in the char counter (text & color).
       if (userInput.length <= maxLimitOfChars) {
         // Calculate number of chars available to the user.
@@ -69,8 +69,6 @@ const App = () => {
         // Visually turn off the 'submit' button.
         setDisabledSubmitButton(true);
       };
-
-      setTaskInput(userInput);
     } catch (error) {
       console.error(error);
     };
@@ -87,8 +85,11 @@ const App = () => {
   // ADD NEW TASK.
   const addTask = (event) => {
     try {
+      // Check if user input is empty or not.
       if (taskInput.length === 0) {
+        // If empty - show warning.
         alert('PLEASE WRITE SOMETHING!');
+        // Prevent page reloading.
         event.preventDefault();
       } else {
         let tasks;
@@ -126,12 +127,16 @@ const App = () => {
     localStorage.setItem('tasks', JSON.stringify(newTaskList));
   };
 
-  // DELTE ALL TASKS.
+  // DELETE ALL TASKS.
   const deleteAllTasks = () => {
     try {
+      // Checking if we have tasks in task list.
       if (taskList.length > 0) {
+        // If YES - ask user if he really want to delete all of it.
         if (window.confirm('ARE YOU SURE?')) {
+          // If YES - clear the LS...
           localStorage.clear();
+          // ... and refresh task list in UI.
           getTaskList();
         };
       };
@@ -140,37 +145,27 @@ const App = () => {
     };
   };
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   // TASK FILTERING.
+  // Handling changes in the filter input field.
   const handleFilterChange = (event) => {
     try {
       // Changing filter input value from default to user's value.
       const filterText = event.target.value;
       setFilterInput(filterText);
-      // // Get the filtered tasks and show it to user.
-      // const filtrationResult = taskList.filter((item) => {
-      //   const regExp = new RegExp(`^${filterText}`, 'gi');
-
-      //   return item.text.match(regExp) ? true : false;
-      // });
-
-      // console.log(filtrationResult);
-      // // setFilteredTasks(filtrationResult);
     } catch (error) {
       console.error(error);
     };
   };
 
+  // Function which filters task list accordingly to user's request.
   const taskFilter = () => {
     setFilteredTasks(taskList.filter((item) => {
+      // Creating regexp for dynamic input data from user.
       const regExp = new RegExp(`^${filterInput}`, 'gi');
-
+      // Shows in UI only tasks which matches user request.
       return item.text.match(regExp) ? true : false;
     }));
   };
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <div className='container'>
