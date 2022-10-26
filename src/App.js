@@ -21,6 +21,14 @@ const App = () => {
     getTaskList();
   }, []);
 
+  useEffect(() => {
+    taskFilter();
+  }, [filterInput]);
+
+  useEffect(() => {
+    taskFilter();
+  }, [taskList]);
+
   // GET ALL TASKS FROM LOCAL STORAGE.
   const getTaskList = () => {
     try {
@@ -139,19 +147,27 @@ const App = () => {
     try {
       // Changing filter input value from default to user's value.
       const filterText = event.target.value;
+      setFilterInput(filterText);
+      // // Get the filtered tasks and show it to user.
+      // const filtrationResult = taskList.filter((item) => {
+      //   const regExp = new RegExp(`^${filterText}`, 'gi');
 
-      // Get the filtered tasks and show it to user.
-      const filtrationResult = taskList.filter((item) => {
-        const regExp = new RegExp(`^${filterText}`, 'gi');
+      //   return item.text.match(regExp) ? true : false;
+      // });
 
-        return item.text.match(regExp) ? true : false;
-      });
-
-      console.log(filtrationResult);
-      // setFilteredTasks(filtrationResult);
+      // console.log(filtrationResult);
+      // // setFilteredTasks(filtrationResult);
     } catch (error) {
       console.error(error);
     };
+  };
+
+  const taskFilter = () => {
+    setFilteredTasks(taskList.filter((item) => {
+      const regExp = new RegExp(`^${filterInput}`, 'gi');
+
+      return item.text.match(regExp) ? true : false;
+    }));
   };
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +215,7 @@ const App = () => {
             />
           </div>
           <ul className='tasks-list'>
-            {taskList.map((task) => {
+            {filteredTasks.map((task) => {
               return <li key={task.id} className='tasks-list-item'>
                 <i className='fas fa-times' onClick={() => deleteSelectedTask(task.id)}></i>
                 {task.text}
