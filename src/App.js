@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import './scss/main.css';
 import { idGenerator } from './utilities/idGenerator';
+import TaskList from './components/TaskList';
 
 const App = () => {
   const [taskList, setTaskList] = useState([]);
@@ -209,14 +210,7 @@ const App = () => {
               placeholder='Search task'
             />
           </div>
-          <ul className='tasks-list'>
-            {filteredTasks.map((task) => {
-              return <li key={task.id} className='tasks-list-item'>
-                <i className='fas fa-times' onClick={() => deleteSelectedTask(task.id)}></i>
-                {task.text}
-              </li>
-            })}
-          </ul>
+          <TaskList filteredTasks={filteredTasks} deleteSelectedTask={deleteSelectedTask} /> 
           <button className='tasks-clear btn-main' onClick={deleteAllTasks}>CLEAR ALL</button>
         </div>
       </div>
