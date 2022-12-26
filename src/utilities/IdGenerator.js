@@ -1,4 +1,3 @@
-
 export const idGenerator = () => {
   const RegExp = /[a-zA-Z0-9]/;
   let source = [];
