@@ -9,6 +9,10 @@ You can create, delete and filter tasks.
     Database:   Browser Local Storage
 ___________________________________________________________________
 
+## Live Version
+
+https://scintillating-salmiakki-ca9e10.netlify.app/
+
 ## Available Scripts
 
 In the project directory you can run:
