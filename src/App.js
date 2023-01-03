@@ -162,7 +162,7 @@ const App = () => {
   const taskFilter = () => {
     setFilteredTasks(taskList.filter((item) => {
       // Creating regexp for dynamic input data from user.
-      const regExp = new RegExp(`^${filterInput}`, 'gi');
+      const regExp = new RegExp(`${filterInput}`, 'gi');
       // Shows in UI only tasks which matches user request.
       return item.text.match(regExp) ? true : false;
     }));
